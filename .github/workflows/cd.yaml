@@ -1,0 +1,30 @@
+name: Continuous Deployment
+
+on:
+  workflow_run:
+    workflows: ["Build and Push to GHCR"]
+    branches: [production]
+    types:
+      - completed
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.AWS_SSH_PRIVATE_KEY }}
+          known_hosts: ${{ secrets.AWS_KNOWN_HOSTS }}
+
+      - name: Run deployment script
+        run: |
+          ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.AWS_EC2_IP }} "
+            cd /opt/quizgen/deploy &&
+            sudo ./deploy.sh
+          "
