@@ -20,11 +20,11 @@ jobs:
         uses: shimataro/ssh-key-action@v2
         with:
           key: ${{ secrets.AWS_SSH_PRIVATE_KEY }}
-          # known_hosts: ${{ secrets.AWS_KNOWN_HOSTS }}
+          known_hosts: ${{ secrets.AWS_KNOWN_HOSTS }}
 
       - name: Run deployment script
         run: |
           ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.AWS_EC2_IP }} "
-            cd /opt/quizgen/deploy &&
+            cd ~/quiz_gen_ai &&
             sudo ./deploy.sh
           "
