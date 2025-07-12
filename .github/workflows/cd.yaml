@@ -25,6 +25,6 @@ jobs:
       - name: Run deployment script
         run: |
           ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.AWS_EC2_IP }} "
-            cd ~/quiz_gen_ai &&
-            sudo ./deploy.sh
+            cd /home/ubuntu/quiz_gen_ai &&
+            ./deploy.sh
           "
